@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAS-SAGE 33</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Questrial&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,700;1,6..96,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{height:100%}
+body{
+  background:#0a0808;
+  font-family:'Questrial',sans-serif;
+  color:#f5f0e8;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ─── IMAGE ─── */
+.img-wrap{
+  position:relative;width:100%;overflow:hidden;
+}
+.img-wrap img{
+  width:100%;display:block;
+  transition:transform 3s cubic-bezier(.22,1,.36,1),filter 2.5s ease;
+  transform-origin:38% 40%;
+}
+/* Gradient fade at the bottom of the image into the background */
+.img-fade{
+  position:absolute;bottom:0;left:0;right:0;height:40%;
+  background:linear-gradient(to bottom,transparent 0%,#1a1410 60%,#0f0c09 100%);
+  pointer-events:none;
+}
+
+/* ─── TEXT SECTION ─── */
+.content{
+  background:linear-gradient(to bottom,#0f0c09 0%,#0a0808 100%);
+  text-align:center;
+  padding:10px 32px 60px;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.verse{
+  font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
+  font-size:clamp(1.2rem,4.5vw,1.55rem);line-height:2.3;
+  color:rgba(228,205,162,.88);margin-bottom:28px;
+  animation:fadeUp 1s .3s both;
+}
+.sep{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-bottom:28px;animation:fadeUp 1s .5s both;
+}
+.sep .l{width:26px;height:1px;background:rgba(200,170,120,.3)}
+.sep .d{width:5px;height:5px;background:rgba(200,170,120,.4);transform:rotate(45deg)}
+
+.details{
+  font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(200,170,120,.42);margin-bottom:24px;
+  animation:fadeUp 1s .6s both;
+}
+.price{
+  font-family:'Bodoni Moda',serif;font-weight:400;
+  font-size:clamp(1.15rem,4vw,1.5rem);letter-spacing:.06em;
+  color:rgba(228,205,162,.82);margin-bottom:5px;
+  animation:fadeUp 1s .7s both;
+}
+.access{
+  font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
+  font-size:.92rem;color:rgba(200,170,120,.38);margin-bottom:36px;
+  animation:fadeUp 1s .8s both;
+}
+.enter-btn{
+  font-family:'Questrial',sans-serif;font-size:.65rem;
+  letter-spacing:.4em;text-transform:uppercase;
+  color:rgba(228,205,162,.85);background:transparent;
+  border:1px solid rgba(200,170,120,.28);
+  padding:15px 48px;cursor:pointer;transition:all .4s;
+  animation:fadeUp 1s 1s both;
+}
+.enter-btn:hover{
+  background:rgba(200,170,120,.08);
+  border-color:rgba(200,170,120,.5);
+}
+
+/* ─── EFFECTS ─── */
+.light{
+  position:fixed;inset:0;z-index:20;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse 50% 50% at 50% 20%,rgba(220,188,125,.9) 0%,rgba(201,169,110,.35) 35%,transparent 65%);
+  transition:opacity 1.8s ease .5s;
+}
+#particles{position:fixed;inset:0;z-index:21;pointer-events:none;opacity:0;transition:opacity .5s ease .2s}
+.wash{
+  position:fixed;inset:0;z-index:22;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse at 50% 20%,#f5e6c8,#e8d5b0 40%,#c9a96e);
+  transition:opacity 1.5s ease 2s;
+}
+
+/* ═══ ANIMATION STATE ═══ */
+body.go{overflow:hidden}
+body.go .img-wrap img{transform:scale(2.8);filter:brightness(2.5) saturate(.15)}
+body.go .img-fade{opacity:0;transition:opacity 1s ease}
+body.go .content{opacity:0;transition:opacity .6s ease}
+body.go .light{opacity:1}
+body.go #particles{opacity:1}
+body.go .wash{opacity:1}
+body.go .enter-btn{pointer-events:none}
+</style>
+</head>
+<body>
+
+<!-- Image -->
+<div class="img-wrap">
+  <img src="corridor.jpg" alt="PAS-SAGE 33">
+  <div class="img-fade"></div>
+</div>
+
+<!-- Text -->
+<div class="content">
+  <p class="verse">
+    Ralentir.<br>
+    Traverser un passage intérieur.<br>
+    Un nouveau niveau de Toi.
+  </p>
+  <div class="sep"><span class="l"></span><span class="d"></span><span class="l"></span></div>
+  <p class="details">Audios · transmissions · présence</p>
+  <p class="price">1 mois · 33€</p>
+  <p class="access">Accès immédiat.</p>
+  <button class="enter-btn" id="enterBtn">E N T E R</button>
+</div>
+
+<!-- Effects -->
+<div class="light"></div>
+<canvas id="particles"></canvas>
+<div class="wash"></div>
+
+<script>
+const c=document.getElementById('particles'),x=c.getContext('2d');let pts=[],r=false;
+function rs(){c.width=innerWidth;c.height=innerHeight}rs();addEventListener('resize',rs);
+function sp(){return{x:c.width*.5+(.5-Math.random())*c.width*.3,y:c.height*.2+(.5-Math.random())*c.height*.2,vx:(Math.random()-.5)*4,vy:Math.random()*2+1,sz:Math.random()*4+1,a:Math.random()*.8+.2,d:Math.random()*.005+.002,co:Math.random()>.5?'225,200,158':'201,169,110'}}
+function an(){if(!r)return;x.clearRect(0,0,c.width,c.height);for(let i=0;i<14;i++)pts.push(sp());for(let i=pts.length-1;i>=0;i--){const q=pts[i];q.x+=q.vx;q.y+=q.vy;q.a-=q.d;if(q.a<=0){pts.splice(i,1);continue}x.beginPath();x.arc(q.x,q.y,q.sz,0,Math.PI*2);x.fillStyle=`rgba(${q.co},${q.a})`;x.fill()}requestAnimationFrame(an)}
+document.getElementById('enterBtn').addEventListener('click',function(){
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{document.body.classList.add('go');r=true;an()},300);
+  setTimeout(()=>{location.href='https://buy.stripe.com/cNieV6f5TfH87RwbOYbZe05'},3500);
+})
+</script>
+</body>
+</html>
