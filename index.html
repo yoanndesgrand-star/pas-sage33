@@ -7,169 +7,196 @@
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Questrial&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,700;1,6..96,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
+html, body { height: 100%; overflow: hidden; }
 body {
-  font-family: 'Questrial', sans-serif;
   background: #0a0808;
-  color: #f5f0e8;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-.hero {
+.scene {
   position: relative;
-  min-height: 100vh;
-  display: flex;
+  width: 100%;
+  height: 100vh;
   overflow: hidden;
 }
 
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-.hero-bg img {
+.scene-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 30% center;
+  object-position: top right;
+  transition: transform 2.5s cubic-bezier(0.22, 1, 0.36, 1), filter 2s ease;
+  transform-origin: 40% 45%;
 }
-/* Minimal overlay — the door is already dark */
-.hero-bg::after {
-  content: '';
+
+/* Golden light that floods from the doorway */
+.light-flood {
   position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, rgba(8,6,5,0.25) 0%, transparent 15%),
-    linear-gradient(to bottom, rgba(8,6,5,0.15) 0%, transparent 8%);
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse 40% 60% at 38% 42%, rgba(218,185,120,0.9) 0%, rgba(201,169,110,0.4) 30%, transparent 65%);
+  transition: opacity 2s ease;
 }
 
-/* Text pinned to right side, below the plaque */
-.hero-content {
+/* White/gold screen wash */
+.screen-wash {
   position: absolute;
-  z-index: 1;
-  right: 3vw;
-  top: 55%;
-  text-align: center;
-  width: 220px;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse at 38% 42%, #f5e6c8 0%, #e8d5b0 40%, #c9a96e 100%);
+  transition: opacity 1.8s ease 0.8s;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Particles canvas */
+#particles {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.hero-verse {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  font-style: italic;
-  font-size: 0.9rem;
-  line-height: 2.2;
-  color: rgba(232,213,176,0.8);
-  margin-bottom: 24px;
-  animation: fadeUp 1s 0.5s both;
-}
-
-.hero-details {
-  font-family: 'Questrial', sans-serif;
-  font-size: 0.45rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(201,169,110,0.5);
-  line-height: 2;
-  margin-bottom: 20px;
-  animation: fadeUp 1s 0.7s both;
-}
-
-.hero-price {
-  font-family: 'Questrial', sans-serif;
-  font-size: 0.45rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(201,169,110,0.5);
-  margin-bottom: 3px;
-  animation: fadeUp 1s 0.8s both;
-}
-
-.hero-access {
-  font-family: 'Cormorant Garamond', serif;
-  font-weight: 300;
-  font-style: italic;
-  font-size: 0.75rem;
-  color: rgba(232,213,176,0.4);
-  margin-bottom: 30px;
-  animation: fadeUp 1s 0.9s both;
-}
-
-.hero-cta {
-  display: inline-block;
-  font-family: 'Questrial', sans-serif;
-  font-size: 0.5rem;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: #e8d5b0;
-  border: 1px solid rgba(201,169,110,0.3);
-  padding: 10px 30px;
-  text-decoration: none;
-  transition: all 0.4s;
+/* Clickable ENTER zone */
+.enter-link {
+  position: absolute;
+  right: 10%;
+  top: 61%;
+  width: 160px;
+  height: 55px;
   cursor: pointer;
-  animation: fadeUp 1s 1.1s both;
+  z-index: 10;
+  border: none;
   background: transparent;
 }
-.hero-cta:hover {
-  background: rgba(201,169,110,0.1);
-  border-color: rgba(201,169,110,0.55);
+.enter-link:hover {
+  background: rgba(201,169,110,0.06);
 }
 
-/* ─── RESPONSIVE ─── */
+/* Opening state */
+.scene.opening .scene-img {
+  transform: scale(1.6);
+  filter: brightness(1.8) saturate(0.5);
+}
+.scene.opening .light-flood {
+  opacity: 1;
+}
+.scene.opening .screen-wash {
+  opacity: 1;
+}
+.scene.opening #particles {
+  opacity: 1;
+}
+.scene.opening .enter-link {
+  pointer-events: none;
+}
+
 @media (max-width: 768px) {
-  .hero-bg img {
-    object-position: 42% center;
+  .scene-img {
+    object-position: 65% top;
+    transform-origin: 50% 40%;
   }
-  .hero-bg::after {
-    background:
-      linear-gradient(to top, rgba(8,6,5,0.9) 0%, rgba(8,6,5,0.5) 35%, transparent 55%),
-      linear-gradient(to bottom, rgba(8,6,5,0.15) 0%, transparent 10%);
+  .light-flood {
+    background: radial-gradient(ellipse 50% 50% at 45% 40%, rgba(218,185,120,0.9) 0%, rgba(201,169,110,0.4) 30%, transparent 60%);
   }
-  .hero-content {
-    position: relative;
-    right: auto;
-    top: auto;
-    width: 100%;
-    max-width: 300px;
-    margin: auto auto 50px;
-    align-self: flex-end;
+  .screen-wash {
+    background: radial-gradient(ellipse at 45% 40%, #f5e6c8 0%, #e8d5b0 40%, #c9a96e 100%);
+  }
+  .enter-link {
+    right: 8%;
+    top: 59%;
+    width: 120px;
+    height: 45px;
   }
 }
 </style>
 </head>
 <body>
 
-<section class="hero">
-  <div class="hero-bg">
-    <img src="passage-bg.jpg" alt="Passage">
-  </div>
+<div class="scene" id="scene">
+  <img class="scene-img" src="passage-bg.jpg" alt="PAS-SAGE 33">
+  <div class="light-flood"></div>
+  <canvas id="particles"></canvas>
+  <div class="screen-wash"></div>
+  <button class="enter-link" id="enterBtn" aria-label="Enter"></button>
+</div>
 
-  <div class="hero-content">
-    <p class="hero-verse">
-      Ralentir.<br>
-      Traverser un passage intérieur.<br>
-      Un nouveau niveau de Toi.
-    </p>
+<script>
+// Particle system — golden dust floating from the doorway
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let animating = false;
 
-    <p class="hero-details">
-      Audios · transmissions · présence
-    </p>
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
 
-    <p class="hero-price">1 mois · 33€</p>
-    <p class="hero-access">Accès immédiat.</p>
+function createParticle() {
+  // Origin: the doorway area
+  const originX = canvas.width * 0.38 + (Math.random() - 0.5) * canvas.width * 0.15;
+  const originY = canvas.height * 0.42 + (Math.random() - 0.5) * canvas.height * 0.25;
+  return {
+    x: originX,
+    y: originY,
+    vx: (Math.random() - 0.5) * 2.5,
+    vy: (Math.random() - 0.5) * 2 - 0.8,
+    size: Math.random() * 3 + 1,
+    alpha: Math.random() * 0.7 + 0.3,
+    decay: Math.random() * 0.008 + 0.003,
+    color: Math.random() > 0.5 ? '218,185,120' : '201,169,110'
+  };
+}
 
-    <a class="hero-cta" href="https://buy.stripe.com/cNieV6f5TfH87RwbOYbZe05" target="_blank">ENTER</a>
-  </div>
-</section>
+function animateParticles() {
+  if (!animating) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Add new particles
+  for (let i = 0; i < 8; i++) {
+    particles.push(createParticle());
+  }
+  
+  particles.forEach((p, i) => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.alpha -= p.decay;
+    if (p.alpha <= 0) { particles.splice(i, 1); return; }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+    ctx.fill();
+  });
+  
+  requestAnimationFrame(animateParticles);
+}
 
+// ENTER click handler
+document.getElementById('enterBtn').addEventListener('click', function() {
+  const scene = document.getElementById('scene');
+  scene.classList.add('opening');
+  
+  // Start particles
+  animating = true;
+  animateParticles();
+  
+  // Redirect after the animation
+  setTimeout(function() {
+    window.location.href = 'https://buy.stripe.com/cNieV6f5TfH87RwbOYbZe05';
+  }, 2800);
+});
+</script>
 </body>
 </html>
