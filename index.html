@@ -6,136 +6,148 @@
 <title>PAS-SAGE 33</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; overflow: hidden; }
-body {
-  background: #0a0808;
-  -webkit-font-smoothing: antialiased;
-}
+body { background: #0a0808; }
 
+/* ─── SCENE ─── */
 .scene {
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  perspective: 1200px;
 }
 
-.scene-img {
+/* ─── CORRIDOR (behind the door) ─── */
+.corridor {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.corridor img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top right;
-  transition: transform 2.5s cubic-bezier(0.22, 1, 0.36, 1), filter 2s ease;
-  transform-origin: 40% 45%;
+  object-position: 35% center;
+  transition: transform 3s cubic-bezier(0.22, 1, 0.36, 1), filter 2.5s ease;
+  transform-origin: 40% 42%;
 }
 
-/* Golden light that floods from the doorway */
-.light-flood {
+/* ─── DOOR (foreground, will swing open) ─── */
+.door {
   position: absolute;
-  top: 0; left: 0;
+  inset: 0;
+  z-index: 5;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.door img {
   width: 100%;
   height: 100%;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(ellipse 40% 60% at 38% 42%, rgba(218,185,120,0.9) 0%, rgba(201,169,110,0.4) 30%, transparent 65%);
-  transition: opacity 2s ease;
+  object-fit: cover;
+  backface-visibility: hidden;
 }
 
-/* White/gold screen wash */
-.screen-wash {
+/* ─── ENTER button zone ─── */
+.enter-btn {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(ellipse at 38% 42%, #f5e6c8 0%, #e8d5b0 40%, #c9a96e 100%);
-  transition: opacity 1.8s ease 0.8s;
+  z-index: 10;
+  left: 50%;
+  top: 67.8%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 58px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }
 
-/* Particles canvas */
+/* ─── Golden light flood ─── */
+.light {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse 50% 60% at 40% 42%, rgba(218,185,120,0.8) 0%, rgba(201,169,110,0.3) 35%, transparent 65%);
+  transition: opacity 1.5s ease 1s;
+}
+
+/* ─── Golden particles ─── */
 #particles {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  z-index: 9;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.8s ease 0.5s;
 }
 
-/* Clickable ENTER zone */
-.enter-link {
+/* ─── Screen wash (final fade) ─── */
+.wash {
   position: absolute;
-  right: 10%;
-  top: 61%;
-  width: 160px;
-  height: 55px;
-  cursor: pointer;
-  z-index: 10;
-  border: none;
-  background: transparent;
-}
-.enter-link:hover {
-  background: rgba(201,169,110,0.06);
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(ellipse at 40% 42%, #f5e6c8 0%, #e8d5b0 40%, #c9a96e 100%);
+  transition: opacity 1.5s ease 2s;
 }
 
-/* Opening state */
-.scene.opening .scene-img {
-  transform: scale(1.6);
-  filter: brightness(1.8) saturate(0.5);
+/* ═══ OPENING STATE ═══ */
+.scene.opening .door {
+  transform: rotateY(-105deg);
 }
-.scene.opening .light-flood {
-  opacity: 1;
+.scene.opening .corridor img {
+  transform: scale(2);
+  filter: brightness(2) saturate(0.3);
 }
-.scene.opening .screen-wash {
+.scene.opening .light {
   opacity: 1;
 }
 .scene.opening #particles {
   opacity: 1;
 }
-.scene.opening .enter-link {
-  pointer-events: none;
+.scene.opening .wash {
+  opacity: 1;
 }
-
-@media (max-width: 768px) {
-  .scene-img {
-    object-position: 65% top;
-    transform-origin: 50% 40%;
-  }
-  .light-flood {
-    background: radial-gradient(ellipse 50% 50% at 45% 40%, rgba(218,185,120,0.9) 0%, rgba(201,169,110,0.4) 30%, transparent 60%);
-  }
-  .screen-wash {
-    background: radial-gradient(ellipse at 45% 40%, #f5e6c8 0%, #e8d5b0 40%, #c9a96e 100%);
-  }
-  .enter-link {
-    right: 8%;
-    top: 59%;
-    width: 120px;
-    height: 45px;
-  }
+.scene.opening .enter-btn {
+  pointer-events: none;
+  opacity: 0;
 }
 </style>
 </head>
 <body>
 
 <div class="scene" id="scene">
-  <img class="scene-img" src="passage-bg.jpg" alt="PAS-SAGE 33">
-  <div class="light-flood"></div>
+  <!-- Layer 1: Corridor behind -->
+  <div class="corridor">
+    <img src="corridor.jpg" alt="">
+  </div>
+
+  <!-- Layer 2: Door (will swing open) -->
+  <div class="door" id="door">
+    <img src="door-closed.jpg" alt="PAS-SAGE 33">
+  </div>
+
+  <!-- Effects -->
+  <div class="light"></div>
   <canvas id="particles"></canvas>
-  <div class="screen-wash"></div>
-  <button class="enter-link" id="enterBtn" aria-label="Enter"></button>
+  <div class="wash"></div>
+
+  <!-- Clickable ENTER -->
+  <button class="enter-btn" id="enterBtn" aria-label="Entrer"></button>
 </div>
 
 <script>
-// Particle system — golden dust floating from the doorway
+// Particles
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let particles = [];
-let animating = false;
+let running = false;
 
 function resize() {
   canvas.width = window.innerWidth;
@@ -144,58 +156,44 @@ function resize() {
 resize();
 window.addEventListener('resize', resize);
 
-function createParticle() {
-  // Origin: the doorway area
-  const originX = canvas.width * 0.38 + (Math.random() - 0.5) * canvas.width * 0.15;
-  const originY = canvas.height * 0.42 + (Math.random() - 0.5) * canvas.height * 0.25;
+function spawnParticle() {
+  const ox = canvas.width * 0.15 + Math.random() * canvas.width * 0.2;
+  const oy = canvas.height * 0.25 + Math.random() * canvas.height * 0.35;
   return {
-    x: originX,
-    y: originY,
-    vx: (Math.random() - 0.5) * 2.5,
-    vy: (Math.random() - 0.5) * 2 - 0.8,
-    size: Math.random() * 3 + 1,
-    alpha: Math.random() * 0.7 + 0.3,
-    decay: Math.random() * 0.008 + 0.003,
-    color: Math.random() > 0.5 ? '218,185,120' : '201,169,110'
+    x: ox, y: oy,
+    vx: (Math.random() - 0.3) * 3,
+    vy: (Math.random() - 0.5) * 2 - 0.5,
+    size: Math.random() * 3.5 + 1,
+    alpha: Math.random() * 0.8 + 0.2,
+    decay: Math.random() * 0.006 + 0.002,
+    color: Math.random() > 0.5 ? '225,200,158' : '201,169,110'
   };
 }
 
-function animateParticles() {
-  if (!animating) return;
+function animate() {
+  if (!running) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Add new particles
-  for (let i = 0; i < 8; i++) {
-    particles.push(createParticle());
-  }
-  
-  particles.forEach((p, i) => {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.alpha -= p.decay;
-    if (p.alpha <= 0) { particles.splice(i, 1); return; }
+  for (let i = 0; i < 10; i++) particles.push(spawnParticle());
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy; p.alpha -= p.decay;
+    if (p.alpha <= 0) { particles.splice(i, 1); continue; }
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
     ctx.fill();
-  });
-  
-  requestAnimationFrame(animateParticles);
+  }
+  requestAnimationFrame(animate);
 }
 
-// ENTER click handler
+// Click handler
 document.getElementById('enterBtn').addEventListener('click', function() {
-  const scene = document.getElementById('scene');
-  scene.classList.add('opening');
-  
-  // Start particles
-  animating = true;
-  animateParticles();
-  
-  // Redirect after the animation
+  document.getElementById('scene').classList.add('opening');
+  running = true;
+  animate();
   setTimeout(function() {
     window.location.href = 'https://buy.stripe.com/cNieV6f5TfH87RwbOYbZe05';
-  }, 2800);
+  }, 3500);
 });
 </script>
 </body>
