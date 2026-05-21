@@ -40,7 +40,7 @@ body { background: #0a0808; }
   position: absolute;
   inset: 0;
   z-index: 5;
-  transform-origin: left center;
+  transform-origin: right center;
   transform-style: preserve-3d;
   transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -56,10 +56,10 @@ body { background: #0a0808; }
   position: absolute;
   z-index: 10;
   left: 50%;
-  top: 67.8%;
+  top: 76%;
   transform: translateX(-50%);
-  width: 200px;
-  height: 58px;
+  width: 210px;
+  height: 62px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -99,7 +99,7 @@ body { background: #0a0808; }
 
 /* ═══ OPENING STATE ═══ */
 .scene.opening .door {
-  transform: rotateY(-105deg);
+  transform: rotateY(105deg);
 }
 .scene.opening .corridor img {
   transform: scale(2);
