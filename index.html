@@ -91,7 +91,6 @@ body{
   position:fixed;inset:0;z-index:20;pointer-events:none;opacity:0;
   background:radial-gradient(ellipse 60% 55% at 40% 15%,rgba(240,210,150,1) 0%,rgba(220,188,125,.5) 30%,transparent 60%);
 }
-#particles{position:fixed;inset:0;z-index:21;pointer-events:none;opacity:0;transition:opacity .5s ease .2s}
 .wash{
   position:fixed;inset:0;z-index:22;pointer-events:none;opacity:0;
   background:radial-gradient(ellipse at 40% 15%,#f5e6c8,#e8d5b0 40%,#c9a96e);
@@ -104,7 +103,6 @@ body.go .img-wrap img{transform:scale(6);filter:brightness(4) saturate(0);transi
 body.go .img-fade{opacity:0;transition:opacity .4s ease}
 body.go .content{opacity:0;transition:opacity .3s ease}
 body.go .light{opacity:1;transition:opacity 1s ease .3s}
-body.go #particles{opacity:1;transition:opacity .4s ease .2s}
 body.go .wash{opacity:1;transition:opacity 1.2s ease 2.5s}
 </style>
 </head>
@@ -132,17 +130,12 @@ body.go .wash{opacity:1;transition:opacity 1.2s ease 2.5s}
 
 <!-- Effects -->
 <div class="light"></div>
-<canvas id="particles"></canvas>
 <div class="wash"></div>
 
 <script>
-const c=document.getElementById('particles'),x=c.getContext('2d');let pts=[],r=false;
-function rs(){c.width=innerWidth;c.height=innerHeight}rs();addEventListener('resize',rs);
-function sp(){return{x:c.width*.4+(.5-Math.random())*c.width*.2,y:c.height*.15+(.5-Math.random())*c.height*.15,vx:(Math.random()-.5)*4,vy:Math.random()*3+1,sz:Math.random()*4+1,a:Math.random()*.8+.2,d:Math.random()*.005+.002,co:Math.random()>.5?'225,200,158':'201,169,110'}}
-function an(){if(!r)return;x.clearRect(0,0,c.width,c.height);for(let i=0;i<14;i++)pts.push(sp());for(let i=pts.length-1;i>=0;i--){const q=pts[i];q.x+=q.vx;q.y+=q.vy;q.a-=q.d;if(q.a<=0){pts.splice(i,1);continue}x.beginPath();x.arc(q.x,q.y,q.sz,0,Math.PI*2);x.fillStyle=`rgba(${q.co},${q.a})`;x.fill()}requestAnimationFrame(an)}
 document.getElementById('enterBtn').addEventListener('click',function(){
   window.scrollTo({top:0,behavior:'smooth'});
-  setTimeout(()=>{document.body.classList.add('go');r=true;an()},200);
+  setTimeout(()=>{document.body.classList.add('go')},200);
   setTimeout(()=>{location.href='https://buy.stripe.com/cNieV6f5TfH87RwbOYbZe05'},4000);
 })
 </script>
