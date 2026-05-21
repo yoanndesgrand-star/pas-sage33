@@ -24,8 +24,8 @@ body{
 }
 .img-wrap img{
   width:100%;display:block;
-  transition:transform 3s cubic-bezier(.22,1,.36,1),filter 2.5s ease;
-  transform-origin:38% 40%;
+  transition:transform 4s cubic-bezier(.1,.4,.2,1),filter 3.5s cubic-bezier(.1,.4,.2,1);
+  transform-origin:38% 35%;
 }
 /* Gradient fade at the bottom of the image into the background */
 .img-fade{
@@ -89,8 +89,7 @@ body{
 /* ─── EFFECTS ─── */
 .light{
   position:fixed;inset:0;z-index:20;pointer-events:none;opacity:0;
-  background:radial-gradient(ellipse 50% 50% at 50% 20%,rgba(220,188,125,.9) 0%,rgba(201,169,110,.35) 35%,transparent 65%);
-  transition:opacity 1.8s ease .5s;
+  background:radial-gradient(ellipse 60% 55% at 50% 15%,rgba(240,210,150,1) 0%,rgba(220,188,125,.5) 30%,transparent 60%);
 }
 #particles{position:fixed;inset:0;z-index:21;pointer-events:none;opacity:0;transition:opacity .5s ease .2s}
 .wash{
@@ -101,13 +100,12 @@ body{
 
 /* ═══ ANIMATION STATE ═══ */
 body.go{overflow:hidden}
-body.go .img-wrap img{transform:scale(2.8);filter:brightness(2.5) saturate(.15)}
-body.go .img-fade{opacity:0;transition:opacity 1s ease}
-body.go .content{opacity:0;transition:opacity .6s ease}
-body.go .light{opacity:1}
-body.go #particles{opacity:1}
-body.go .wash{opacity:1}
-body.go .enter-btn{pointer-events:none}
+body.go .img-wrap img{transform:scale(6);filter:brightness(4) saturate(0);transition:transform 4s cubic-bezier(.1,.4,.2,1),filter 3.5s cubic-bezier(.1,.4,.2,1)}
+body.go .img-fade{opacity:0;transition:opacity .4s ease}
+body.go .content{opacity:0;transition:opacity .3s ease}
+body.go .light{opacity:1;transition:opacity 1s ease .3s}
+body.go #particles{opacity:1;transition:opacity .4s ease .2s}
+body.go .wash{opacity:1;transition:opacity 1.2s ease 2.5s}
 </style>
 </head>
 <body>
@@ -144,8 +142,8 @@ function sp(){return{x:c.width*.5+(.5-Math.random())*c.width*.3,y:c.height*.2+(.
 function an(){if(!r)return;x.clearRect(0,0,c.width,c.height);for(let i=0;i<14;i++)pts.push(sp());for(let i=pts.length-1;i>=0;i--){const q=pts[i];q.x+=q.vx;q.y+=q.vy;q.a-=q.d;if(q.a<=0){pts.splice(i,1);continue}x.beginPath();x.arc(q.x,q.y,q.sz,0,Math.PI*2);x.fillStyle=`rgba(${q.co},${q.a})`;x.fill()}requestAnimationFrame(an)}
 document.getElementById('enterBtn').addEventListener('click',function(){
   window.scrollTo({top:0,behavior:'smooth'});
-  setTimeout(()=>{document.body.classList.add('go');r=true;an()},300);
-  setTimeout(()=>{location.href='https://buy.stripe.com/cNieV6f5TfH87RwbOYbZe05'},3500);
+  setTimeout(()=>{document.body.classList.add('go');r=true;an()},200);
+  setTimeout(()=>{location.href='https://buy.stripe.com/cNieV6f5TfH87RwbOYbZe05'},4000);
 })
 </script>
 </body>
